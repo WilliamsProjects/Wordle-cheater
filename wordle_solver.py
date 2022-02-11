@@ -91,7 +91,7 @@ def wordle_solver(black_letters, yellow_letters, green_letters):
                 num_letters_allowed = len(green_letters[letter])
 
 
-        final_words = [elem for elem in final_words if num_letters_in_word(letter,elem) == num_letters_allowed]
+            final_words = [elem for elem in final_words if num_letters_in_word(letter,elem) == num_letters_allowed]
 
     return final_words
 
@@ -203,5 +203,19 @@ def wordle_user_io():
 
 
 if __name__ == "__main__":
-    wordle_user_io()
+
+    user_io = False
+
+    if user_io:
+        wordle_user_io()
+    
+    else:
+        black = ['t','i','m','s','b','o','n','f','a','d','e','p']
+        yellow = {'l':[0]}
+        green = {'e':[3], 'r':[4]}
+
+        possible_words = wordle_solver(black,yellow,green)
+
+        print(f'The list of possible words is: \n\n {possible_words}')
+    
 
