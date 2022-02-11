@@ -26,49 +26,66 @@ def wordle_solver(black_letters, yellow_letters, green_letters):
     words = pd.read_csv('words.csv')
     word_list = list(words.dictionary)
 
-    #finding letters in both black and in yellow and/or green
-    yellow = list(yellow_letters.keys())
-    green = list(green_letters.keys())
-    yellow.extend(green_letters)
-    union_letters = set(black_letters).intersection(set(yellow))
-
-    #getting letters in both black and in yellow and/or green out of black letters
-    
-    black_letters = [elem for elem in black_letters if elem not in union_letters]
+    if black_letters != []:
 
 
-    #Removing all black letters which aren't also yellow/green letters
+        #finding letters in both black and in yellow and/or green
+        yellow = list(yellow_letters.keys())
+        green = list(green_letters.keys())
+        yellow.extend(green_letters)
+        union_letters = set(black_letters).intersection(set(yellow))
 
-    word_list = [elem for elem in word_list if not contains_letter(black_letters,elem)]
+        #getting letters in both black and in yellow and/or green out of black letters
+        
+        black_letters = [elem for elem in black_letters if elem not in union_letters]
+
+
+        #Removing all black letters which aren't also yellow/green letters
+
+        word_list = [elem for elem in word_list if not contains_letter(black_letters,elem)]
 
     #Getting words with yellow letters in them but not in the same place as the yellow letters were placed
 
-    new_word_list = []
+    if yellow_letters == {}:
+        new_word_list = word_list.copy()
+    
+    else:
+        new_word_list = []
 
-    for word in word_list:
-        count = 0
-        for key in yellow_letters:
-            
-            #Only append word to list if the words contains each letter in yellow letters and index(es) where they are 
-            #placed is different to the index(es) of those letters in the word
-            if contains_letter(key,word) and set(get_letter_index(key,word)) != set(yellow_letters[key]):
-                count = count + 1
+        for word in word_list:
+            count = 0
+            for key in yellow_letters:
+                if word == 'puker':
+                    i = 1
+                    pass
+                #Only append word to list if the words contains each letter in yellow letters and index(es) where they are 
+                #placed is different to the index(es) of those letters in the word
+                indices_real = set(get_letter_index(key,word))
+                indices_tried = set(yellow_letters[key])
+                if contains_letter(key,word) and not indices_real.issubset(indices_tried):
+                    count = count + 1
 
-            if count == len(yellow_letters):
-                new_word_list.append(word)
+                if count == len(yellow_letters):
+                    new_word_list.append(word)
 
-    #Getting words where the green letters are in the same position as where the green letters were placed
+    if green_letters == {}:
+        final_words = new_word_list.copy()
 
-    final_words = []
-    for word in new_word_list:
-        count = 0
-        for key in green_letters:
+    else:
 
-            if contains_letter(key,word) and set(get_letter_index(key,word)) == set(green_letters[key]):
-                count = count + 1
-                
-            if count == len(green_letters):    
-                final_words.append(word)
+
+        #Getting words where the green letters are in the same position as where the green letters were placed
+
+        final_words = []
+        for word in new_word_list:
+            count = 0
+            for key in green_letters:
+
+                if contains_letter(key,word) and set(get_letter_index(key,word)) == set(green_letters[key]):
+                    count = count + 1
+                    
+                if count == len(green_letters):    
+                    final_words.append(word)
 
 
     #Removing words where the number of letters which are present in both the black letters and yellow and/or green letters
@@ -210,12 +227,12 @@ if __name__ == "__main__":
         wordle_user_io()
     
     else:
-        black = ['t','i','m','s','b','o','n','f','a','d','e','p']
-        yellow = {'l':[0]}
-        green = {'e':[3], 'r':[4]}
+        black = ['s','t','a','d','o','g','h','q','e']
+        yellow = {'u':[1,2],'r':[3]}
+        green = {'e':[3],'r':[4]}
 
         possible_words = wordle_solver(black,yellow,green)
-
+        print(f'There are {len(possible_words)} words')
         print(f'The list of possible words is: \n\n {possible_words}')
     
 
